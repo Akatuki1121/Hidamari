@@ -15,6 +15,9 @@ public class PlayerGrowth : MonoBehaviour
     [SerializeField] float plantX = 0.2f;
     [SerializeField] float plantZ = 0.2f;
 
+    //生存時間
+    float survivalTime;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -43,6 +46,17 @@ public class PlayerGrowth : MonoBehaviour
         growth += growthSpeed * Time.deltaTime;
         //植物の成長
         transform.localScale = new Vector3(plantX, growth, plantZ);
+    }
+
+    //生存時間
+    public float GetHeight()
+    {
+        return growth;
+    }
+    //植物の高さ
+    public float GetSurvivalTime()
+    {
+        return survivalTime;
     }
 
     bool IsInSunLight()
