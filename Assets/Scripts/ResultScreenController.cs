@@ -11,7 +11,7 @@ public class ResultScreenController : MonoBehaviour
 
     public void DisplayResult(float p_grow_time, float p_height)
     {
-        m_grow_time_text.text = $"生存時間: {p_grow_time.ToString(k_time_format)}秒";
-        m_height_text.text = $"高さ: {p_height.ToString(k_height_format)}m";
+        m_grow_time_text.text = $"Time: {p_grow_time.ToString(k_time_format)}s";
+        m_height_text.text = $"Height: {p_height.ToString(k_height_format)}m";
     }
 }

@@ -10,7 +10,6 @@ public class GameFlowManager : MonoBehaviour
     }
 
     [SerializeField] private GameObject m_explanation_panel;
-    [SerializeField] private GameObject m_playing_panel;
     [SerializeField] private PlayerMove m_player_move;
 
     private const string k_result_scene_name = "Result";
@@ -34,17 +33,17 @@ public class GameFlowManager : MonoBehaviour
     {
         float l_grow_time = Time.time - m_play_start_time;
         GameResultData.SetResult(l_grow_time, p_final_height);
+        RankingData.Register(p_final_height);
         SceneManager.LoadScene(k_result_scene_name);
     }
 
     private void ChangeState(GameState p_next_state)
     {
-        SetAllPanelsInactive();
-        ActivatePanelFor(p_next_state);
+        ApplyStateVisuals(p_next_state);
         m_current_state = p_next_state;
     }
 
-    private void ActivatePanelFor(GameState p_state)
+    private void ApplyStateVisuals(GameState p_state)
     {
         switch (p_state)
         {
@@ -54,17 +53,11 @@ public class GameFlowManager : MonoBehaviour
                 break;
 
             case GameState.playing:
-                m_playing_panel.SetActive(true);
+                m_explanation_panel.SetActive(false);
                 m_play_start_time = Time.time;
                 SetPlayerInputEnabled(true);
                 break;
         }
-    }
-
-    private void SetAllPanelsInactive()
-    {
-        m_explanation_panel.SetActive(false);
-        m_playing_panel.SetActive(false);
     }
 
     private void SetPlayerInputEnabled(bool p_enabled)
