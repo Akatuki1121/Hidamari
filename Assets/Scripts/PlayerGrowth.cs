@@ -11,6 +11,10 @@ public class PlayerGrowth : MonoBehaviour
     [SerializeField] float growth = 1f;
     [SerializeField] float growthLimit = 10f;
 
+    [Header("植物の大きさ")]
+    [SerializeField] float plantX = 0.2f;
+    [SerializeField] float plantZ = 0.2f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,19 +29,20 @@ public class PlayerGrowth : MonoBehaviour
             //日に当たっている時
             growthSpeed += 0.1f * Time.deltaTime;
             //成長限界
-            growthSpeed = Mathf.Max(growthSpeed, growthLimit);
+            growthSpeed = Mathf.Min(growthSpeed, growthLimit);
         }
         else
         {
             //日に当たっていない時
             growthSpeed -= drakGrowthSpeed * Time.deltaTime;
-            growthSpeed = Mathf.Min(growthSpeed, 0f);
+
+            growthSpeed = Mathf.Max(growthSpeed, 0f);
         }
 
         //現在の成長速度
         growth += growthSpeed * Time.deltaTime;
         //植物の成長
-        transform.localScale = new Vector3(1f, growth, 1f);
+        transform.localScale = new Vector3(plantX, growth, plantZ);
     }
 
     bool IsInSunLight()
