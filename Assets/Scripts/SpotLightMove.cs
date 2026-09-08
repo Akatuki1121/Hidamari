@@ -16,23 +16,21 @@ public class SpotLightMove : MonoBehaviour
 
     private float m_min_position_x;
     private float m_max_position_x;
-    private float m_min_position_z;
-    private float m_max_position_z;
-    private Vector2 m_target_position_xz;
+    private float m_target_position_x;
 
     void Start()
     {
         SetupMoveRangeFromFloor();
-        PickNewTargetPositionXZ();
+        PickNewTargetPositionX();
     }
 
     void Update()
     {
-        MoveTowardsTargetPositionXZ();
+        MoveTowardsTargetPositionX();
 
-        if (HasArrivedAtTargetPositionXZ())
+        if (HasArrivedAtTargetPositionX())
         {
-            PickNewTargetPositionXZ();
+            PickNewTargetPositionX();
         }
     }
 
@@ -42,42 +40,34 @@ public class SpotLightMove : MonoBehaviour
         {
             m_min_position_x = transform.position.x;
             m_max_position_x = transform.position.x;
-            m_min_position_z = transform.position.z;
-            m_max_position_z = transform.position.z;
             return;
         }
 
         Bounds floor_bounds = m_floor_renderer.bounds;
         m_min_position_x = floor_bounds.min.x;
         m_max_position_x = floor_bounds.max.x;
-        m_min_position_z = floor_bounds.min.z;
-        m_max_position_z = floor_bounds.max.z;
     }
 
-    private void PickNewTargetPositionXZ()
+    private void PickNewTargetPositionX()
     {
-        float target_x = Random.Range(m_min_position_x, m_max_position_x);
-        float target_z = Random.Range(m_min_position_z, m_max_position_z);
-        m_target_position_xz = new Vector2(target_x, target_z);
+        m_target_position_x = Random.Range(m_min_position_x, m_max_position_x);
     }
 
-    private void MoveTowardsTargetPositionXZ()
+    private void MoveTowardsTargetPositionX()
     {
         Vector3 current_position = transform.position;
-        Vector2 current_position_xz = new Vector2(current_position.x, current_position.z);
 
-        Vector2 new_position_xz = Vector2.MoveTowards(
-            current_position_xz,
-            m_target_position_xz,
+        float new_position_x = Mathf.MoveTowards(
+            current_position.x,
+            m_target_position_x,
             m_move_speed * Time.deltaTime);
 
-        transform.position = new Vector3(new_position_xz.x, current_position.y, new_position_xz.y);
+        transform.position = new Vector3(new_position_x, current_position.y, current_position.z);
     }
 
-    private bool HasArrivedAtTargetPositionXZ()
+    private bool HasArrivedAtTargetPositionX()
     {
-        Vector2 current_position_xz = new Vector2(transform.position.x, transform.position.z);
-        float distance_to_target = Vector2.Distance(current_position_xz, m_target_position_xz);
+        float distance_to_target = Mathf.Abs(transform.position.x - m_target_position_x);
         return distance_to_target <= m_arrival_distance;
     }
 }
