@@ -15,6 +15,16 @@ public class PlayerGrowth : MonoBehaviour
     [SerializeField] float plantX = 0.2f;
     [SerializeField] float plantZ = 0.2f;
 
+    [Header("位置補正の基準の高さ")]
+    [SerializeField] float bestHight = 0.8f;
+
+    [Header("ゲームオーバー判定")]
+    [SerializeField] private GameFlowManager m_game_flow_manager;
+    [SerializeField] private float m_out_of_light_time_limit = 3.0f;
+
+    private float m_out_of_light_timer = 0.0f;
+    private bool m_is_game_over = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,12 +34,19 @@ public class PlayerGrowth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_is_game_over)
+        {
+            return;
+        }
+
         if(IsInSunLight())
         {
             //日に当たっている時
             growthSpeed += 0.1f * Time.deltaTime;
             //成長限界
             growthSpeed = Mathf.Min(growthSpeed, growthLimit);
+
+            m_out_of_light_timer = 0.0f;
         }
         else
         {
@@ -37,12 +54,35 @@ public class PlayerGrowth : MonoBehaviour
             growthSpeed -= drakGrowthSpeed * Time.deltaTime;
 
             growthSpeed = Mathf.Max(growthSpeed, 0f);
+
+            m_out_of_light_timer += Time.deltaTime;
+
+            if (m_out_of_light_timer >= m_out_of_light_time_limit)
+            {
+                TriggerGameOver();
+                return;
+            }
         }
 
         //現在の成長速度
         growth += growthSpeed * Time.deltaTime;
+        float newHight = growth;
         //植物の成長
         transform.localScale = new Vector3(plantX, growth, plantZ);
+        float offset = (newHight - bestHight) * 0.5f;
+        transform.localPosition = new Vector3(transform.localPosition.x, offset, transform.localPosition.z);
+    }
+
+    private void TriggerGameOver()
+    {
+        m_is_game_over = true;
+
+        if (m_game_flow_manager == null)
+        {
+            return;
+        }
+
+        m_game_flow_manager.OnGameOver(growth);
     }
 
     bool IsInSunLight()
