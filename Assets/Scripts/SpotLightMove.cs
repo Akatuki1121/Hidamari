@@ -10,6 +10,12 @@ public class SpotLightMove : MonoBehaviour
     [SerializeField]
     private float m_move_speed = 2.0f;
 
+    [Header("移動範囲")]
+    [SerializeField]
+    float minX = -10f;
+    [SerializeField]
+    float maxX = 10f;
+
     [Header("目標地点に到達したとみなす距離")]
     [SerializeField]
     private float m_arrival_distance = 0.1f;
@@ -42,10 +48,14 @@ public class SpotLightMove : MonoBehaviour
     {
         m_light = GetComponent<Light>();
 
-        if(m_plant != null)
+        if (m_plant != null)
         {
             m_plant_renderer = m_plant.GetComponentInChildren<Renderer>();
         }
+
+        Vector3 position = transform.position;
+        position.x = Mathf.Clamp(position.x, minX, maxX);
+        transform.position = position;
 
         SetupMoveRangeFromFloor();
         PickNewTargetPositionX();
@@ -60,7 +70,7 @@ public class SpotLightMove : MonoBehaviour
             PickNewTargetPositionX();
         }
 
-        if (IsPlantTipInSpotLight())
+        if (IsPlantInSpotLight())
         {
             m_outside_time = 0f;
             m_blink_timer = 0f;
@@ -84,14 +94,14 @@ public class SpotLightMove : MonoBehaviour
     {
         if (m_floor_renderer == null)
         {
-            m_min_position_x = transform.position.x;
-            m_max_position_x = transform.position.x;
+            m_min_position_x = minX;
+            m_max_position_x = maxX;
             return;
         }
 
         Bounds floor_bounds = m_floor_renderer.bounds;
-        m_min_position_x = floor_bounds.min.x;
-        m_max_position_x = floor_bounds.max.x;
+        m_min_position_x = Mathf.Max(floor_bounds.min.x, minX);
+        m_max_position_x = Mathf.Min(floor_bounds.max.x, maxX);
     }
 
     private void PickNewTargetPositionX()
@@ -117,27 +127,102 @@ public class SpotLightMove : MonoBehaviour
         return distance_to_target <= m_arrival_distance;
     }
 
-    private bool IsPlantTipInSpotLight()
+    private bool IsPlantInSpotLight()
     {
-        if (m_plant == null|| m_plant_renderer==null || m_light == null)
+        if (m_plant == null ||
+            m_plant_renderer == null ||
+            m_light == null)
         {
             return false;
         }
 
-        Vector3 plant_tip = m_plant_renderer.bounds.max;
+        Bounds plant_bounds =
+            m_plant_renderer.bounds;
 
-        Vector3 dir = plant_tip - transform.position;
+        Vector3[] check_points =
+        {
+        plant_bounds.center,
 
-        float dis = dir.magnitude;
+        new Vector3(
+            plant_bounds.min.x,
+            plant_bounds.min.y,
+            plant_bounds.min.z
+        ),
 
-        if (dis > m_light.range)
+        new Vector3(
+            plant_bounds.min.x,
+            plant_bounds.min.y,
+            plant_bounds.max.z
+        ),
+
+        new Vector3(
+            plant_bounds.min.x,
+            plant_bounds.max.y,
+            plant_bounds.min.z
+        ),
+
+        new Vector3(
+            plant_bounds.min.x,
+            plant_bounds.max.y,
+            plant_bounds.max.z
+        ),
+
+        new Vector3(
+            plant_bounds.max.x,
+            plant_bounds.min.y,
+            plant_bounds.min.z
+        ),
+
+        new Vector3(
+            plant_bounds.max.x,
+            plant_bounds.min.y,
+            plant_bounds.max.z
+        ),
+
+        new Vector3(
+            plant_bounds.max.x,
+            plant_bounds.max.y,
+            plant_bounds.min.z
+        ),
+
+        new Vector3(
+            plant_bounds.max.x,
+            plant_bounds.max.y,
+            plant_bounds.max.z
+        )
+    };
+
+        foreach (Vector3 point in check_points)
+        {
+            if (IsPointInSpotLight(point))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsPointInSpotLight(Vector3 point)
+    {
+        Vector3 dir =
+            point - transform.position;
+
+        float distance =
+            dir.magnitude;
+
+        if (distance > m_light.range)
         {
             return false;
         }
 
         dir.Normalize();
 
-        float angle = Vector3.Angle(transform.forward, dir);
+        float angle =
+            Vector3.Angle(
+                transform.forward,
+                dir
+            );
 
         if (angle > m_light.spotAngle / 2f)
         {
