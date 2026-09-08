@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5874892912804916706}
   - component: {fileID: 8140546748242714329}
   - component: {fileID: 8746056387523970113}
-  - component: {fileID: 2010760537596374205}
+  - component: {fileID: 7385709466714154496}
   m_Layer: 0
   m_Name: Spot Light
   m_TagString: Untagged
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!114 &2010760537596374205
+--- !u!114 &7385709466714154496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,9 +137,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3693328247416592597}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c89dae366ba70e6449da3e319064e4e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 93a69c67549e23c42baa721e924215cd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpotLightMove
-  m_floor_renderer: {fileID: 0}
-  m_move_speed: 2
-  m_arrival_distance: 0.1
+  m_EditorClassIdentifier: Assembly-CSharp::PlantSpotLight
+  plant: {fileID: 0}
+  followSpeed: 3
+  spotLightOffset: 2
