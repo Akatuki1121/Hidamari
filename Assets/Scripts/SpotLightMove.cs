@@ -14,12 +14,32 @@ public class SpotLightMove : MonoBehaviour
     [SerializeField]
     private float m_arrival_distance = 0.1f;
 
+    [Header("植物")]
+    [SerializeField]
+    private PlayerGrowth m_plant;
+
+    [Header("点滅")]
+    [SerializeField]
+    private float m_initial_blink_interval = 0.5f;
+    [SerializeField]
+    private float m_min_blink_interval = 0.05f;
+    [SerializeField]
+    private float m_blink_speed_up = 0.1f;
+
     private float m_min_position_x;
     private float m_max_position_x;
     private float m_target_position_x;
 
+    private float m_outside_time = 0f;
+    private float m_blink_timer = 0f;
+    private bool m_light_on = true;
+
+    private Light m_light;
+
     void Start()
     {
+        m_light = GetComponent<Light>();
+
         SetupMoveRangeFromFloor();
         PickNewTargetPositionX();
     }
@@ -31,6 +51,25 @@ public class SpotLightMove : MonoBehaviour
         if (HasArrivedAtTargetPositionX())
         {
             PickNewTargetPositionX();
+        }
+
+        if (IsPlantInSpotLight())
+        {
+            m_outside_time = 0f;
+            m_blink_timer = 0f;
+
+            m_light_on = true;
+
+            if (m_light != null)
+            {
+                m_light.enabled = true;
+            }
+        }
+        else
+        {
+            m_outside_time += Time.deltaTime;
+
+            BlinkLight();
         }
     }
 
@@ -69,5 +108,51 @@ public class SpotLightMove : MonoBehaviour
     {
         float distance_to_target = Mathf.Abs(transform.position.x - m_target_position_x);
         return distance_to_target <= m_arrival_distance;
+    }
+
+    private bool IsPlantInSpotLight()
+    {
+        if (m_plant == null || m_light == null)
+        {
+            return false;
+        }
+
+        Vector3 dir = m_plant.transform.position - transform.position;
+
+        float dis = dir.magnitude;
+
+        if (dis > m_light.range)
+        {
+            return false;
+        }
+
+        dir.Normalize();
+
+        float angle = Vector3.Angle(transform.forward, dir);
+
+        if (angle > m_light.spotAngle / 2f)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void BlinkLight()
+    {
+        float blink_interval = m_initial_blink_interval - m_outside_time * m_blink_speed_up;
+
+        blink_interval = Mathf.Max(blink_interval, m_min_blink_interval);
+
+        m_blink_timer += Time.deltaTime;
+
+        if (m_blink_timer >= blink_interval)
+        {
+            m_blink_timer = 0f;
+
+            m_light_on = !m_light_on;
+
+            m_light.enabled = m_light_on;
+        }
     }
 }
