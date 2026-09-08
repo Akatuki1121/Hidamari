@@ -32,7 +32,7 @@ public class TitleSceneController : MonoBehaviour
         }
 
         float l_best_height = RankingData.GetBestHeight();
-        m_best_height_text.text = $"Best: {l_best_height.ToString(k_height_format)}m";
+        m_best_height_text.text = $" {l_best_height.ToString(k_height_format)}";
         m_best_height_text.color = k_best_height_text_color;
         m_best_height_text.outlineWidth = k_best_height_outline_width;
         m_best_height_text.outlineColor = k_best_height_outline_color;
