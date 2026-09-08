@@ -31,7 +31,7 @@ public class PlantCameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        if (plant == null)
+        if (plant == null || plantPenderer == null)
         {
             return;
         }

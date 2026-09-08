@@ -2,59 +2,23 @@ using UnityEngine;
 
 public class GameFlowManager : MonoBehaviour
 {
-    public enum GameState
-    {
-        explanation,
-        playing
-    }
-
-    [SerializeField] private GameObject m_explanation_panel;
     [SerializeField] private PlayerMove m_player_move;
 
-    private GameState m_current_state;
     private float m_play_start_time;
 
     private void Start()
     {
-        ChangeState(GameState.explanation);
+        m_play_start_time = Time.time;
+        SetPlayerInputEnabled(true);
     }
 
-    // 操作説明画面の「わかった」ボタンから呼ぶ
-    public void OnExplanationConfirmed()
-    {
-        ChangeState(GameState.playing);
-    }
-
-    // ゲームオーバー判定側(未実装)から、最終的な高さを渡して呼んでもらう想定のフック
+    // ゲームオーバー判定側から、最終的な高さを渡して呼んでもらう想定のフック
     public void OnGameOver(float p_final_height)
     {
         float l_grow_time = Time.time - m_play_start_time;
         GameResultData.SetResult(l_grow_time, p_final_height);
         RankingData.Register(p_final_height);
         SceneTransition.LoadResult();
-    }
-
-    private void ChangeState(GameState p_next_state)
-    {
-        ApplyStateVisuals(p_next_state);
-        m_current_state = p_next_state;
-    }
-
-    private void ApplyStateVisuals(GameState p_state)
-    {
-        switch (p_state)
-        {
-            case GameState.explanation:
-                m_explanation_panel.SetActive(true);
-                SetPlayerInputEnabled(false);
-                break;
-
-            case GameState.playing:
-                m_explanation_panel.SetActive(false);
-                m_play_start_time = Time.time;
-                SetPlayerInputEnabled(true);
-                break;
-        }
     }
 
     private void SetPlayerInputEnabled(bool p_enabled)
