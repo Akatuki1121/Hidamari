@@ -22,6 +22,7 @@ public class TitleSceneController : MonoBehaviour
     public void OnStartButtonPressed()
     {
         SceneManager.LoadScene(k_game_scene_name);
+        Debug.Log("A");
     }
 
     private void DisplayBestHeight()
