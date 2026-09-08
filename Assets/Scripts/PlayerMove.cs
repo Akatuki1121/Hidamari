@@ -5,6 +5,10 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField]
     private float m_move_speed = 5.0f;
+    [SerializeField]
+    float minX = -5f;
+    [SerializeField]
+    float maxX = 5f;
 
     [SerializeField]
     private bool m_use_camera_relative_direction = true;
@@ -48,6 +52,10 @@ public class PlayerMove : MonoBehaviour
         {
             MoveWithTransform(move_direction);
         }
+
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        transform.position = pos;
     }
 
     void FixedUpdate()
