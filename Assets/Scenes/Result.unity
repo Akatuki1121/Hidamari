@@ -918,6 +918,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResultSceneController
   m_result_screen_controller: {fileID: 65826993}
+  m_back_to_title_button_object: {fileID: 696293225}
 --- !u!4 &1283568355
 Transform:
   m_ObjectHideFlags: 0

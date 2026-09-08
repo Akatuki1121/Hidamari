@@ -701,6 +701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleSceneController
   m_best_height_text: {fileID: 1951402536}
+  m_start_button_object: {fileID: 1981291639}
 --- !u!4 &916685489
 Transform:
   m_ObjectHideFlags: 0

@@ -1,12 +1,11 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class TitleSceneController : MonoBehaviour
 {
     [SerializeField] private TMP_Text m_best_height_text;
+    [SerializeField] private GameObject m_start_button_object;
 
-    private const string k_game_scene_name = "Game";
     private const string k_height_format = "F2";
 
     private static readonly Color32 k_best_height_text_color = new Color32(0xAE, 0x56, 0x0C, 0xFF);
@@ -18,11 +17,15 @@ public class TitleSceneController : MonoBehaviour
         DisplayBestHeight();
     }
 
+    private void Update()
+    {
+        SceneTransition.HandleGamepadAdvance(m_start_button_object, OnStartButtonPressed);
+    }
+
     // スタート画面の「はじめる」ボタンから呼ぶ
     public void OnStartButtonPressed()
     {
-        SceneManager.LoadScene(k_game_scene_name);
-        Debug.Log("A");
+        SceneTransition.LoadTutorial();
     }
 
     private void DisplayBestHeight()
