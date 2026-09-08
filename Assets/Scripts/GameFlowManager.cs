@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameFlowManager : MonoBehaviour
 {
@@ -11,8 +10,6 @@ public class GameFlowManager : MonoBehaviour
 
     [SerializeField] private GameObject m_explanation_panel;
     [SerializeField] private PlayerMove m_player_move;
-
-    private const string k_result_scene_name = "Result";
 
     private GameState m_current_state;
     private float m_play_start_time;
@@ -34,7 +31,7 @@ public class GameFlowManager : MonoBehaviour
         float l_grow_time = Time.time - m_play_start_time;
         GameResultData.SetResult(l_grow_time, p_final_height);
         RankingData.Register(p_final_height);
-        SceneManager.LoadScene(k_result_scene_name);
+        SceneTransition.LoadResult();
     }
 
     private void ChangeState(GameState p_next_state)

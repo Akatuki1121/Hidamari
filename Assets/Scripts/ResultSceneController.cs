@@ -1,15 +1,18 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ResultSceneController : MonoBehaviour
 {
     [SerializeField] private ResultScreenController m_result_screen_controller;
-
-    private const string k_title_scene_name = "Title";
+    [SerializeField] private GameObject m_back_to_title_button_object;
 
     private void Start()
     {
         DisplayResult();
+    }
+
+    private void Update()
+    {
+        SceneTransition.HandleGamepadAdvance(m_back_to_title_button_object, OnRetryButtonPressed);
     }
 
     private void DisplayResult()
@@ -25,6 +28,6 @@ public class ResultSceneController : MonoBehaviour
     // リザルト画面の「スタートへ戻る」ボタンから呼ぶ
     public void OnRetryButtonPressed()
     {
-        SceneManager.LoadScene(k_title_scene_name);
+        SceneTransition.LoadTitle();
     }
 }
