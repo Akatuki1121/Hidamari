@@ -36,9 +36,16 @@ public class SpotLightMove : MonoBehaviour
 
     private Light m_light;
 
+    private Renderer m_plant_renderer;
+
     void Start()
     {
         m_light = GetComponent<Light>();
+
+        if(m_plant != null)
+        {
+            m_plant_renderer = m_plant.GetComponentInChildren<Renderer>();
+        }
 
         SetupMoveRangeFromFloor();
         PickNewTargetPositionX();
@@ -53,7 +60,7 @@ public class SpotLightMove : MonoBehaviour
             PickNewTargetPositionX();
         }
 
-        if (IsPlantInSpotLight())
+        if (IsPlantTipInSpotLight())
         {
             m_outside_time = 0f;
             m_blink_timer = 0f;
@@ -110,14 +117,16 @@ public class SpotLightMove : MonoBehaviour
         return distance_to_target <= m_arrival_distance;
     }
 
-    private bool IsPlantInSpotLight()
+    private bool IsPlantTipInSpotLight()
     {
-        if (m_plant == null || m_light == null)
+        if (m_plant == null|| m_plant_renderer==null || m_light == null)
         {
             return false;
         }
 
-        Vector3 dir = m_plant.transform.position - transform.position;
+        Vector3 plant_tip = m_plant_renderer.bounds.max;
+
+        Vector3 dir = plant_tip - transform.position;
 
         float dis = dir.magnitude;
 
