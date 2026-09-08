@@ -6,9 +6,9 @@ public class PlayerMove : MonoBehaviour
     [SerializeField]
     private float m_move_speed = 5.0f;
     [SerializeField]
-    float minX = -5f;
+    float minX = -10f;
     [SerializeField]
-    float maxX = 5f;
+    float maxX = 10f;
 
     [SerializeField]
     private bool m_use_camera_relative_direction = true;
