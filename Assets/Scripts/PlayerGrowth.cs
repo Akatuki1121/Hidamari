@@ -24,6 +24,8 @@ public class PlayerGrowth : MonoBehaviour
 
     private float m_out_of_light_timer = 0.0f;
     private bool m_is_game_over = false;
+    //生存時間
+    float survivalTime;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -83,6 +85,17 @@ public class PlayerGrowth : MonoBehaviour
         }
 
         m_game_flow_manager.OnGameOver(growth);
+    }
+
+    //生存時間
+    public float GetHeight()
+    {
+        return growth;
+    }
+    //植物の高さ
+    public float GetSurvivalTime()
+    {
+        return survivalTime;
     }
 
     bool IsInSunLight()
