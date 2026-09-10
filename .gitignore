@@ -47,8 +47,6 @@
 
 # NuGet Packages
 *.nupkg
-**/[Pp]ackages/*
-!**/[Pp]ackages/build/
 
 # .NET build artifacts
 artifacts/
@@ -154,8 +152,6 @@ x86/
 
 # NuGet
 *.nupkg
-**/[Pp]ackages/*
-!**/[Pp]ackages/build/
 *.nuget.props
 *.nuget.targets
 
